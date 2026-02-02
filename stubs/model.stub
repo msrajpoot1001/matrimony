@@ -1,0 +1,30 @@
+<?php
+
+namespace {{ namespace }};
+
+{{ factoryImport }}
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class {{ class }} extends Model
+{
+    {{ factory }}
+    use SoftDeletes;
+
+    /**
+     * The attributes that are mass assignable.
+     */
+    protected $fillable = [
+        // Add your common fillables here if you want defaults for all models
+        'deleted_at',
+        'deleted_by',
+        'delete_reason',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     */
+    protected $casts = [
+        'deleted_at' => 'datetime',
+    ];
+}

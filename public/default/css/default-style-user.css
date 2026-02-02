@@ -1,0 +1,194 @@
+/* icon in ckeditor  */
+.round-tick-icon {
+    color: white;
+    font-size: 0.8rem;
+    background-color: #022b6d;
+    padding: 0.2rem;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+}
+
+
+/* this is to arrange the content in number of lines  */
+.clamp-1-lines {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.clamp-1-lines.no-clamp {
+    -webkit-line-clamp: unset;
+    overflow: visible;
+    text-overflow: unset;
+}
+
+
+.clamp-2-lines {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.clamp-2-lines.no-clamp {
+    -webkit-line-clamp: unset;
+    overflow: visible;
+    text-overflow: unset;
+}
+
+
+
+.clamp-3-lines {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.clamp-3-lines.no-clamp {
+    -webkit-line-clamp: unset;
+    overflow: visible;
+    text-overflow: unset;
+}
+
+
+
+.ck-editor-content li {
+    position: relative;
+    padding-left: 2rem;
+    /* space for the tick */
+    margin-bottom: 10px;
+}
+
+.ck-editor-content li::before {
+    content: "✓";
+    /* the tick mark */
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: white;
+    /* you can change color */
+    font-size: 0.8rem;
+    font-weight: bold;
+    border-radius: 50%;
+    padding: 0rem 0.5rem;
+    background-color: #fd7e14;
+}
+
+
+
+/* // this for number of line content */
+.three-line-text {
+    display: -webkit-box;
+    /* enables line clamp */
+    -webkit-box-orient: vertical;
+    /* vertical orientation */
+    -webkit-line-clamp: 3;
+    /* clamp to 3 lines */
+    overflow: hidden;
+    /* hide extra lines */
+    text-overflow: ellipsis;
+    /* show "..." if text overflows */
+    word-break: break-word;
+    transition: line-height 0.2s, font-size 0.2s;
+}
+
+
+/* other service other type  */
+.radio-select .input-sec {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.radio-select .label-head {
+    color: black !important;
+    margin: 0px !important;
+}
+
+.radio-card {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    padding: 14px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all .2s ease;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    margin-top: 0.5rem;
+    /* width: 48%!important; */
+}
+
+/* ⭐ SELECTED STATE */
+.radio-card:has(input[type="radio"]:checked) {
+    border-color: #d4af37;
+    box-shadow: 0 0 0 2px rgba(212, 175, 55, .25),
+        0 10px 25px rgba(0, 0, 0, .15);
+}
+
+.radio-card:hover {
+    border-color: var(--orange-color);
+}
+
+.radio-card input[type="radio"] {
+    accent-color: var(--orange-color);
+    width: 1.5rem;
+    height: 1.5rem;
+    cursor: pointer;
+
+}
+
+.radio-card span {
+    color: black !important;
+    line-height: 1rem;
+    font-weight: bold;
+    margin-left: 0.7rem;
+    padding-top: 0.3rem;
+}
+
+.banner__inputlist {
+    border-radius: 20px;
+
+}
+
+.banner__inputlist textarea {
+    color: black !important;
+}
+
+.banner__inputlist textarea::placeholder {
+    color: rgb(194, 193, 193) !important;
+}
+
+.banner__inputlist input {
+    width: 100%;
+}
+
+.padding-top {
+    padding-top: 4rem !important;
+}
+
+
+.padding-bottom {
+    padding-bottom: 4rem !important;
+}
+
+.pageheader {
+    padding-block: 0px !important;
+}
+
+.about__right {
+    border-radius: 10px;
+}
+
+.website_animation {
+    border-radius: 10px;
+}
+
+#casteSelect option, #subCasteSelect option {
+    padding: 0.5rem;
+}

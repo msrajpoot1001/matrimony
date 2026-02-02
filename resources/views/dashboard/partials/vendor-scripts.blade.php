@@ -1,0 +1,211 @@
+<!-- JAVASCRIPT -->
+{{-- <script src="https://unpkg.com/eva-icons"></script> --}}
+
+<script src="{{ URL::asset('build/libs/eva-icons/eva.min.js') }}"></script>
+<script src="{{ URL::asset('build/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ URL::asset('build/libs/metismenujs/metismenujs.min.js') }}"></script>
+<script src="{{ URL::asset('build/libs/simplebar/simplebar.min.js') }}"></script>
+
+<script src="{{ URL::asset('build/libs/apexcharts/apexcharts.min.js') }}"></script>
+<script src="{{ URL::asset('build/libs/jsvectormap/js/jsvectormap.min.js') }}"></script>
+<script src="{{ URL::asset('build/libs/jsvectormap/maps/world-merc.js') }}"></script>
+<script src="{{ URL::asset('build/js/pages/dashboard.init.js') }}"></script>
+<script src="{{ URL::asset('build/js/app.js') }}"></script>
+
+<!-- jQuery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<!-- Toastr JS & CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+
+{{-- Custom Script  --}}
+<script src="{{ URL::asset('build/js/custom-script.js') }}"></script>
+
+{{-- this is for backend default js  --}}
+<script type="module" src="{{ asset('default/js/default-script-admin.js') }}"></script>
+
+{{-- this is for frontend  --}}
+<script type="module" src="{{ asset('default/js/default-script-user.js') }}"></script>
+
+<script>
+    $(document).ready(function() {
+        @if (Session::has('message'))
+            toastr.options = {
+                "closeButton": true,
+                "progressBar": true
+            };
+            toastr.success("{{ session('message') }}");
+        @endif
+
+        @if (Session::has('error'))
+            toastr.options = {
+                "closeButton": true,
+                "progressBar": true
+            };
+            toastr.error("{{ session('error') }}");
+        @endif
+
+        @if (Session::has('success'))
+            toastr.options = {
+                "closeButton": true,
+                "progressBar": true
+            };
+            toastr.success("{{ session('success') }}");
+        @endif
+    });
+</script>
+
+<script src="https://cdn.ckeditor.com/4.21.0/full-all/ckeditor.js"></script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const descriptionFields = document.querySelectorAll('[id^="description"]');
+
+
+        descriptionFields.forEach((element) => {
+            const editorId = element.id;
+            CKEDITOR.replace(editorId, {
+                extraPlugins: 'colorbutton,font,justify,format,print,table,image2,link,liststyle,stylescombo,embed,embedbase,autoembed,iframe',
+                removePlugins: 'image', // using image2
+                filebrowserUploadUrl: "{{ route('admin.ckeditor.upload-image') }}?_token={{ csrf_token() }}",
+                filebrowserUploadMethod: 'form',
+                colorButton_colors: '000000,FF0000,00FF00,0000FF,F1C40F,9B59B6,34495E,1ABC9C,FFFFFF',
+                colorButton_enableMore: true,
+                embed_provider: '//ckeditor.iframe.ly/api/oembed?url={url}&callback={callback}',
+
+                htmlEmbed: {
+                    showPreviews: true
+                },
+
+                // ✅ This allows iframe and its attributes
+                allowedContent: true,
+                extraAllowedContent: 'iframe[*];',
+                toolbar: [{
+                        name: 'document',
+                        items: ['Source', 'Preview', 'Print', '-', 'Templates']
+                    },
+                    {
+                        name: 'clipboard',
+                        items: ['Undo', 'Redo', 'Cut', 'Copy', 'Paste', 'PasteText',
+                            'PasteFromWord'
+                        ]
+                    },
+                    {
+                        name: 'editing',
+                        items: ['Find', 'Replace', '-', 'SelectAll']
+                    },
+                    {
+                        name: 'styles',
+                        items: ['Styles', 'Format', 'Font', 'FontSize']
+                    },
+                    {
+                        name: 'basicstyles',
+                        items: ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript',
+                            'Superscript', '-', 'RemoveFormat'
+                        ]
+                    },
+                    {
+                        name: 'colors',
+                        items: ['TextColor', 'BGColor']
+                    },
+                    {
+                        name: 'paragraph',
+                        items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent',
+                            '-', 'Blockquote', 'CreateDiv', '-', 'JustifyLeft',
+                            'JustifyCenter', 'JustifyRight', 'JustifyBlock'
+                        ]
+                    },
+                    {
+                        name: 'links',
+                        items: ['Link', 'Unlink', 'Anchor']
+                    },
+                    {
+                        name: 'insert',
+                        items: ['Image', 'Table', 'HorizontalRule', 'SpecialChar', 'Embed',
+                            'Iframe'
+                        ]
+                    },
+                    {
+                        name: 'tools',
+                        items: ['Maximize', 'ShowBlocks']
+                    }
+                ],
+
+                height: 300
+            });
+
+
+
+            CKEDITOR.instances[editorId].on('instanceReady', function() {
+                const editorInstance = this;
+
+                editorInstance.document.on('keydown', function(event) {
+                    if (event.data.getKey() === 46) { // Delete key
+                        const selection = editorInstance.getSelection();
+                        const element = selection.getSelectedElement();
+
+                        if (element && element.getName() === 'img') {
+                            const imageUrl = element.getAttribute('src');
+
+                            // Remove image from editor
+                            element.remove();
+
+                            // Send request to server to delete image file
+                            fetch('/ckeditor/delete-image', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                    },
+                                    body: JSON.stringify({
+                                        url: imageUrl
+                                    })
+                                })
+                                .then(res => res.json())
+                                .then(data => {
+                                    if (!data.success) {
+                                        console.warn(
+                                            'Server failed to delete image:',
+                                            data.message);
+                                    }
+                                })
+                                .catch(err => {
+                                    console.error('Error deleting image:', err);
+                                });
+                        }
+                    }
+                });
+            });
+        });
+    });
+</script>
+
+
+
+<script>
+    window.validationErrors = {!! json_encode($errors->all()) !!};
+</script>
+
+
+{{-- script for delete reason handling  --}}
+<script>
+    function handleDeleteReason(form) {
+        // ✅ ask reason directly (optional)
+        let reason = prompt("Delete reason (optional):");
+
+        // cancel => stop delete
+        if (reason === null) return false;
+
+        form.querySelector('input[name="delete_reason"]').value = reason.trim();
+        return true;
+    }
+</script>
+
+
+
+
+
+@yield('scripts')

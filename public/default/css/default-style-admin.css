@@ -1,0 +1,113 @@
+.astrick {
+    color: red;
+    font-weight: bold;
+}
+
+.editor-wrapper textarea {
+    min-height: 100%;
+    resize: vertical;
+    /* optional: allow vertical resizing */
+}
+
+
+/* arrange the item of table in vertically center of table 
+ */
+.v-center {
+    vertical-align: middle;
+}
+
+
+/* intially hide form in a page  */
+#create-form-section {
+    display: none;
+}
+
+
+.v-center .btn-success, .v-center .btn-danger {
+    margin-bottom: 0.5rem;
+    /* width: 100%; */
+}
+
+:root {
+    --primary-color: #f69a25;
+    --primary-color-light: #9bdba3;
+    /* for gradient hover */
+    --primary-text: #ffffff;
+}
+
+/* background helpers */
+.primaray-bg-color {
+    background-color: var(--primary-color) !important;
+    color: var(--primary-text) !important;
+}
+
+.noti-dot {
+    background-color: var(--primary-color) !important;
+}
+
+a {
+    color: var(--primary-color);
+}
+
+.uil-arrow-circle-right-head {
+    color: var(--primary-color) !important;
+}
+
+.bg-primary {
+    background-color: var(--primary-color) !important;
+}
+
+/* buttons */
+.btn-primary {
+    background-color: var(--primary-color) !important;
+    color: var(--primary-text) !important;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg,
+            var(--primary-color) 0%,
+            var(--primary-color-light) 100%) !important;
+    border: none !important;
+}
+
+.btn-success {
+    background-color: var(--primary-color) !important;
+    color: var(--primary-text) !important;
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg,
+            var(--primary-color) 0%,
+            var(--primary-color-light) 100%) !important;
+}
+
+/* toast */
+.toast-success {
+    background-color: var(--primary-color) !important;
+    color: var(--primary-text) !important;
+}
+
+/* misc */
+.btn-danger {
+    margin-bottom: 0px !important;
+}
+
+
+.modal-header {
+    background-color: var(--primary-color) !important;
+}
+
+.modal-title {
+    background-color: var(--primary-color) !important;
+    color: var(--primary-text) !important;
+}
+
+.read-only {
+    background-color: rgb(208, 207, 207);
+}
+
+
+.page-item.active .page-link {
+    background-color: var(--primary-color);
+    color: #fff;
+}

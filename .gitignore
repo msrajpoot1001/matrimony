@@ -1,0 +1,59 @@
+app/Console/Commands/
+Command/
+
+
+
+# Dependencies
+/vendor/
+node_modules/
+
+# Laravel environment
+.env
+.env.*
+!.env.example
+
+# Laravel storage & caches
+/storage/*.key
+/storage/logs/*
+/storage/framework/cache/data/*
+/storage/framework/sessions/*
+/storage/framework/testing/*
+/storage/framework/views/*
+/bootstrap/cache/*.php
+
+# Keep placeholder .gitignore files
+!storage/logs/.gitignore
+!storage/framework/.gitignore
+!bootstrap/cache/.gitignore
+
+# Public hot reload & storage symlink
+/public/hot
+/public/storage
+
+# PHPUnit cache
+.phpunit.result.cache
+/.phpunit.cache/
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.code-workspace
+.fleet/
+
+# Package manager logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Composer
+composer.phar
+
+# Homestead / local dev
+Homestead.yaml
+Homestead.json
+
+# Coverage reports
+coverage/
