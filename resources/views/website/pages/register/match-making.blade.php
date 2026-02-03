@@ -142,6 +142,80 @@
             border-top: 1px solid #eee;
         }
     </style>
+
+    <style>
+        .custom-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .custom-modal-content {
+            background: #fff;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 8px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .custom-modal-header {
+            background: #dc3545;
+            color: #fff;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .custom-modal-body {
+            padding: 20px;
+        }
+
+        .custom-modal-body ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .custom-modal-body li {
+            color: #dc3545;
+            margin-bottom: 8px;
+        }
+
+        .custom-modal-footer {
+            padding: 15px 20px;
+            text-align: right;
+        }
+
+        .custom-modal-footer button {
+            padding: 8px 16px;
+            border: none;
+            background: #6c757d;
+            color: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .custom-close {
+            cursor: pointer;
+            font-size: 22px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
 @endsection
 
 {{-- custom script for this page --}}
@@ -288,6 +362,30 @@
 
         });
     </script>
+
+    @if ($errors->any())
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var errorModal = new bootstrap.Modal(
+                    document.getElementById('validationErrorModal')
+                );
+                errorModal.show();
+            });
+        </script>
+    @endif
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('customErrorModal');
+            if (modal) {
+                modal.style.display = 'flex';
+            }
+        });
+
+        function closeErrorModal() {
+            document.getElementById('customErrorModal').style.display = 'none';
+        }
+    </script>
 @endsection
 
 
@@ -312,6 +410,33 @@
 
 
     @include('components.success-modal')
+    {{-- @include('components.error-modal') --}}
+
+    @if ($errors->any())
+        <div id="customErrorModal" class="custom-modal">
+            <div class="custom-modal-content">
+
+                <div class="custom-modal-header">
+                    <h4>❌ Please fix the following errors</h4>
+                    <span class="custom-close" onclick="closeErrorModal()">&times;</span>
+                </div>
+
+                <div class="custom-modal-body">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+
+                <div class="custom-modal-footer">
+                    <button onclick="closeErrorModal()">Close</button>
+                </div>
+
+            </div>
+        </div>
+    @endif
+
     <!-- ================> About section start here <================== -->
     <div class="about about--style2 padding-top pt-xl-0" style="margin-top:2rem">
         <div class="container">
@@ -387,10 +512,11 @@
                                         </div>
 
                                         <div class="col-6">
-                                            <label>Email</label>
+                                            <label>Email <span class="astrick">*</span></label>
                                             <div class="banner__inputlist">
                                                 <input type="email" name="email" placeholder="Enter email address"
-                                                    value="{{ old('email') }}" data-label="Email">
+                                                    value="{{ old('email') }}" data-label="Email" required>
+
                                                 @error('email')
                                                     <span class="text-danger">{{ $message }}</span>
                                                 @enderror
@@ -451,9 +577,10 @@
                                             <label>Contact Number <span class="astrick">*</span></label>
                                             <div class="banner__inputlist">
                                                 <input type="tel" name="contact_number"
-                                                    placeholder="10 digit mobile number" maxlength="10"
+                                                    placeholder="10 digit mobile number" maxlength="13"
                                                     value="{{ old('contact_number') }}" required
-                                                    data-label="Contact Number">
+                                                    data-label="Contact Number"
+                                                    oninput="this.value = this.value.replace(/[^0-9+\-\s]/g, '')">
                                                 @error('contact_number')
                                                     <span class="text-danger">{{ $message }}</span>
                                                 @enderror
@@ -516,7 +643,7 @@
                                             <div class="banner__inputlist">
                                                 <select name="caste" id="casteSelect" required data-label="Caste"
                                                     class="form-control">
-                                                    
+
                                                     <option value="">-- Select Caste --</option>
                                                     @foreach ($caste as $item)
                                                         <option value="{{ $item->id }}"
@@ -752,7 +879,8 @@
                                             <div class="banner__inputlist">
                                                 <input type="text" name="family_income"
                                                     placeholder="Total family income" value="{{ old('family_income') }}"
-                                                    data-label="Family Income">
+                                                    data-label="Family Income"
+                                                    oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                                                 @error('family_income')
                                                     <span class="text-danger">{{ $message }}</span>
                                                 @enderror
@@ -904,7 +1032,7 @@
                                         </div>
 
                                         <div class="col-6">
-                                            <label>Govt ID Proof</label>
+                                            <label>Govt ID Proof </label>
                                             <div class="banner__inputlist">
                                                 <input type="file" name="govt_id_proof" data-label="Govt ID Proof">
                                                 @error('govt_id_proof')
@@ -975,4 +1103,7 @@
             </div>
         </div>
     </div>
+
+
+
 @endsection

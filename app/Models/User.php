@@ -19,6 +19,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'contact_number',
         'role', // stores user_roles.id
         'password',
     ];
@@ -66,4 +67,16 @@ class User extends Authenticatable
     {
         return $this->belongsTo(UserRole::class, 'role', 'id');
     }
+
+    public function astrologies()
+{
+    return $this->hasMany(Astrology::class, 'ref_id');
+}
+
+public function mandaps()
+{
+    return $this->hasMany(Mandap::class, 'ref_id');
+}
+
+
 }

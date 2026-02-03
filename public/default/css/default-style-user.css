@@ -192,3 +192,8 @@
 #casteSelect option, #subCasteSelect option {
     padding: 0.5rem;
 }
+
+
+.banner__inputlist select {
+    padding: 0.5rem;
+}

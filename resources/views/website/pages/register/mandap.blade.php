@@ -166,10 +166,10 @@
 
                                         <!-- Email -->
                                         <div class="col-6">
-                                            <label>Email</label>
+                                            <label>Email <span class="astrick">*</span></label>
                                             <div class="banner__inputlist">
                                                 <input type="email" name="email" value="{{ old('email') }}"
-                                                    placeholder="Enter Email">
+                                                    placeholder="Enter Email" required>
                                             </div>
 
                                             @error('email')

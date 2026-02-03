@@ -7,35 +7,38 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PerformKanyadan extends Model
 {
-    //
     use SoftDeletes;
 
     /**
-     * The attributes that are mass assignable.
+     * Mass assignable fields
      */
-    //  'user_type',
     protected $fillable = [
-       
-       'donor_name',
-        'email',
+        'ref_id',
+        'donor_name',
         'gender',
         'dob',
         'contact_number',
         'whatsapp_number',
+        'location',
         'kanyadan_type',
         'donation_amount',
-        'transction_id',
         'other_kanyadan',
         'blessings',
-        'deleted_at',
-        'deleted_by',
-        'delete_reason',
     ];
 
     /**
-     * The attributes that should be cast.
+     * Casts
      */
     protected $casts = [
+        'dob'        => 'date',
         'deleted_at' => 'datetime',
     ];
+
+    /**
+     * PerformKanyadan belongs to User
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'ref_id');
+    }
 }

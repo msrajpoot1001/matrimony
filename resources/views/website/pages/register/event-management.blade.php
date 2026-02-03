@@ -169,9 +169,9 @@
                                         </div>
 
                                         <div class="col-6">
-                                            <label>Date of Birth (mm/dd/yyyy)<span class="astrick">*</span></label>
+                                            <label>Date of Birth (mm/dd/yyyy)</label>
                                             <div class="banner__inputlist">
-                                                <input type="date" name="dob" value="{{ old('dob') }}" required>
+                                                <input type="date" name="dob" value="{{ old('dob') }}">
                                             </div>
 
                                             @error('dob')

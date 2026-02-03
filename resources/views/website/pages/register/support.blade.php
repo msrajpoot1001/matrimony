@@ -49,6 +49,7 @@
     </div>
     <!-- ================> Page Header section end here <================== -->
     @include('components.success-modal')
+    @include('components.error-modal')
     <!-- ================> About section start here <================== -->
     <div class="about about--style2 padding-top pt-xl-0" style="margin-top:2rem">
         <div class="container">

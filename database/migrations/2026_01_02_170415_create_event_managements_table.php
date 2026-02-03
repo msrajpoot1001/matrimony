@@ -6,33 +6,33 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('event_managements', function (Blueprint $table) {
             $table->id();
+
+            /* ================= USER LINK ================= */
+            $table->foreignId('ref_id')
+                ->constrained('users')
+                ->cascadeOnDelete();
+
             $table->string('user_type')->nullable();
             $table->string('full_name');
-            $table->string('email')->nullable();
             $table->string('gender');
-            $table->date('dob');
+            $table->date('dob')->nullable();
             $table->string('contact_number');
             $table->string('whatsapp_number')->nullable();
             $table->integer('experience_years')->nullable();
             $table->string('location');
             $table->string('services_offered');
             $table->string('other_service')->nullable();
-             $table->text('add_require')->nullable();
+            $table->text('add_require')->nullable();
+
             $table->timestamps();
-            $table->softDeleteWithMeta(); // ✅ auto included in all new tables
+            $table->softDeletes(); // ✅ Laravel default
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('event_managements');

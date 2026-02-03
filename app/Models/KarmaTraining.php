@@ -7,16 +7,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class KarmaTraining extends Model
 {
-    //
     use SoftDeletes;
 
     /**
-     * The attributes that are mass assignable.
+     * Mass assignable fields
      */
     protected $fillable = [
+        'ref_id',
         'user_type',
-       'full_name',
-        'email',
+        'full_name',
         'gender',
         'dob',
         'contact_number',
@@ -24,16 +23,23 @@ class KarmaTraining extends Model
         'qualification',
         'experience_years',
         'location',
+        'other_service',
         'add_require',
-        'deleted_at',
-        'deleted_by',
-        'delete_reason',
     ];
 
     /**
-     * The attributes that should be cast.
+     * Casts
      */
     protected $casts = [
+        'dob'        => 'date',
         'deleted_at' => 'datetime',
     ];
+
+    /**
+     * KarmaTraining belongs to User
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'ref_id');
+    }
 }

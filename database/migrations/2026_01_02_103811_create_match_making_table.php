@@ -11,7 +11,12 @@ return new class extends Migration {
         Schema::create('match_makings', function (Blueprint $table) {
             $table->id();
 
-            // System
+            /* ================= USER LINK ================= */
+            $table->foreignId('ref_id')
+                ->constrained('users')
+                ->cascadeOnDelete();
+
+            /* ================= SYSTEM ================= */
             $table->string('application_id')->unique()->nullable();
 
             /* ================= BASIC DETAILS ================= */
@@ -20,17 +25,15 @@ return new class extends Migration {
             $table->string('email')->nullable();
             $table->string('gender');
             $table->date('dob');
-            $table->integer('height')->nullable();         // in inches
-            $table->string('contact_number');
-            $table->string('whatsapp_number')->nullable();
+            $table->integer('height')->nullable();         // inches
 
             /* ================= PERSONAL & RELIGION ================= */
             $table->string('marital_status');
             $table->string('religion');
             $table->string('caste');
             $table->string('sub_caste')->nullable();
-            $table->string('manglik_status')->nullable();  // Yes / No / Don't Know
-            $table->string('interest_inter_caste')->nullable(); // Yes / No
+            $table->string('manglik_status')->nullable();
+            $table->string('interest_inter_caste')->nullable();
 
             /* ================= PROFESSIONAL DETAILS ================= */
             $table->string('qualification');
@@ -38,8 +41,8 @@ return new class extends Migration {
             $table->string('designation')->nullable();
             $table->string('place_of_work')->nullable();
             $table->integer('year_of_experience')->nullable();
-            $table->string('employment_status');           // Working / Not Working
-            $table->string('annual_income')->nullable();   // INR
+            $table->string('employment_status');
+            $table->string('annual_income')->nullable();
 
             /* ================= FAMILY DETAILS ================= */
             $table->string('father_name');
@@ -47,9 +50,9 @@ return new class extends Migration {
             $table->string('mother_name');
             $table->string('mother_occupation');
             $table->string('family_income')->nullable();
-            $table->string('family_status');               // Middle / Upper / Rich
-            $table->string('family_values');               // Orthodox / Modern / Liberal / Spiritual
-            $table->string('living_with_family');          // Yes / No
+            $table->string('family_status');
+            $table->string('family_values');
+            $table->string('living_with_family');
             $table->string('living_at')->nullable();
             $table->string('ancestral_origin')->nullable();
 
@@ -65,7 +68,7 @@ return new class extends Migration {
 
             /* ================= META ================= */
             $table->timestamps();
-            $table->softDeletes(); // use standard Laravel soft deletes
+            $table->softDeletes();
         });
     }
 

@@ -7,34 +7,41 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class FoodCatering extends Model
 {
-    //
     use SoftDeletes;
 
     /**
-     * The attributes that are mass assignable.
+     * Mass assignable fields
      */
     protected $fillable = [
+        'ref_id',
         'user_type',
-         'full_name',
+        'full_name',
         'email',
         'gender',
         'dob',
         'contact_number',
         'whatsapp_number',
+        'qualification',
         'experience_years',
         'location',
         'looking_for',
         'other_service',
         'add_require',
-        'deleted_at',
-        'deleted_by',
-        'delete_reason',
     ];
 
     /**
-     * The attributes that should be cast.
+     * Casts
      */
     protected $casts = [
+        'dob'        => 'date',
         'deleted_at' => 'datetime',
     ];
+
+    /**
+     * FoodCatering belongs to User
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'ref_id');
+    }
 }

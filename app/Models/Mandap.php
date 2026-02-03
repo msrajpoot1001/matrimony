@@ -7,22 +7,19 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Mandap extends Model
 {
-    //
     use SoftDeletes;
 
     /**
-     * The attributes that are mass assignable.
+     * Mass assignable fields
      */
     protected $fillable = [
+        'ref_id',
         'user_type',
         'mandap_for',
-        'user_type',
         'other_event',
         'full_name',
-        'email',
         'gender',
         'dob',
-        'contact_number',
         'whatsapp_number',
         'place_name',
         'guest_count',
@@ -30,15 +27,22 @@ class Mandap extends Model
         'preferred_date',
         'venue_category',
         'additional_requirements',
-        'deleted_at',
-        'deleted_by',
-        'delete_reason',
     ];
 
     /**
-     * The attributes that should be cast.
+     * Casts
      */
     protected $casts = [
-        'deleted_at' => 'datetime',
+        'dob'            => 'date',
+        'preferred_date' => 'date',
+        'deleted_at'     => 'datetime',
     ];
+
+    /**
+     * Mandap belongs to User
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'ref_id');
+    }
 }

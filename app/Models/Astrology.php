@@ -7,19 +7,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Astrology extends Model
 {
-    //
     use SoftDeletes;
 
     /**
-     * The attributes that are mass assignable.
+     * Mass assignable attributes
      */
     protected $fillable = [
+        'ref_id',
         'user_type',
-         'name',
-        'email',
         'gender',
         'dob',
-        'contact_number',
         'whatsapp_number',
         'specialization',
         'experience_years',
@@ -27,15 +24,21 @@ class Astrology extends Model
         'services_offered',
         'other_service',
         'add_require',
-        'deleted_at',
-        'deleted_by',
-        'delete_reason',
     ];
 
     /**
-     * The attributes that should be cast.
+     * Casts
      */
     protected $casts = [
+        'dob'        => 'date',
         'deleted_at' => 'datetime',
     ];
+
+    /**
+     * Astrology belongs to User
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'ref_id');
+    }
 }

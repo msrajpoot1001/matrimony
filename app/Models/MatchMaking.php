@@ -10,24 +10,25 @@ class MatchMaking extends Model
     use SoftDeletes;
 
     /**
-     * The attributes that are mass assignable.
+     * Mass assignable fields
      */
     protected $fillable = [
 
-        /* ================= SYSTEM ================= */
+        /* USER LINK */
+        'ref_id',
+
+        /* SYSTEM */
         'application_id',
 
-        /* ================= BASIC DETAILS ================= */
+        /* BASIC DETAILS */
         'looking_for',
         'candidate_name',
         'email',
         'gender',
         'dob',
         'height',
-        'contact_number',
-        'whatsapp_number',
 
-        /* ================= PERSONAL & RELIGION ================= */
+        /* PERSONAL & RELIGION */
         'marital_status',
         'religion',
         'caste',
@@ -35,7 +36,7 @@ class MatchMaking extends Model
         'manglik_status',
         'interest_inter_caste',
 
-        /* ================= PROFESSIONAL DETAILS ================= */
+        /* PROFESSIONAL DETAILS */
         'qualification',
         'company_name',
         'designation',
@@ -44,7 +45,7 @@ class MatchMaking extends Model
         'employment_status',
         'annual_income',
 
-        /* ================= FAMILY DETAILS ================= */
+        /* FAMILY DETAILS */
         'father_name',
         'father_occupation',
         'mother_name',
@@ -56,12 +57,12 @@ class MatchMaking extends Model
         'living_at',
         'ancestral_origin',
 
-        /* ================= HOROSCOPE ================= */
+        /* HOROSCOPE */
         'birth_place',
         'birth_time',
         'kundali_details',
 
-        /* ================= UPLOADS ================= */
+        /* UPLOADS */
         'full_photo',
         'govt_id_proof',
         'kundali',
@@ -77,6 +78,14 @@ class MatchMaking extends Model
     ];
 
     /**
+     * Relationship: MatchMaking belongs to User
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'ref_id');
+    }
+
+    /**
      * Auto-generate application_id
      */
     protected static function boot()
@@ -85,15 +94,12 @@ class MatchMaking extends Model
 
         static::creating(function ($model) {
 
-            // Prefix based on profile type
             $prefix = ($model->looking_for === 'Bride') ? 'BRD' : 'GRM';
 
-            // Get last record regardless of prefix
             $lastRecord = self::whereNotNull('application_id')
                 ->orderBy('id', 'desc')
                 ->first();
 
-            // Start or increment
             $newNumber = $lastRecord
                 ? ((int) substr($lastRecord->application_id, 3)) + 1
                 : 24851;

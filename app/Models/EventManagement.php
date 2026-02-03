@@ -9,13 +9,15 @@ class EventManagement extends Model
 {
     use SoftDeletes;
 
-    // 🔥 THIS LINE FIXES THE ERROR
     protected $table = 'event_managements';
 
+    /**
+     * Mass assignable fields
+     */
     protected $fillable = [
+        'ref_id',
         'user_type',
         'full_name',
-        'email',
         'gender',
         'dob',
         'contact_number',
@@ -25,12 +27,21 @@ class EventManagement extends Model
         'services_offered',
         'other_service',
         'add_require',
-        'deleted_at',
-        'deleted_by',
-        'delete_reason',
     ];
 
+    /**
+     * Casts
+     */
     protected $casts = [
+        'dob'        => 'date',
         'deleted_at' => 'datetime',
     ];
+
+    /**
+     * EventManagement belongs to User
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'ref_id');
+    }
 }
