@@ -21,4 +21,11 @@ class Caste extends Model {
     protected $casts = [
         'deleted_at' => 'datetime',
     ];
+
+     
+
+    public function matchMakings()
+    {
+        return $this->hasMany(MatchMaking::class);
+    }
 }

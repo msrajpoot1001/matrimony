@@ -1,0 +1,29 @@
+@extends('dashboard.layouts.app')
+
+@section('title', 'Dashboard | Add ' . ucfirst('Pandit'))
+
+@section('content')
+
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul class="mb-0">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <div class="row mt-4">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">All {{ ucfirst('Pandit') }}</h4>
+                </div>
+                <div class="card-body">
+                </div>
+            </div>
+        </div>
+    </div>
+
+@endsection

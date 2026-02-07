@@ -20,6 +20,11 @@
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title">All {{ ucfirst('Users') }}</h4>
+                    <div class="d-flex justify-content-end">
+                        <a href="{{ route('admin.astrology.create') }}" class="btn btn-sm btn-primary view-btn">
+                            Create Member
+                        </a>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">

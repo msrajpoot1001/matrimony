@@ -1,6 +1,6 @@
 @extends('dashboard.layouts.app')
 
-@section('title', 'Mandap Records')
+@section('title', 'Food Catering Records')
 
 @section('content')
 
@@ -9,7 +9,12 @@
             <div class="card">
 
                 <div class="card-header">
-                    <h4 class="card-title">All Mandap Requests</h4>
+                    <h4 class="card-title">All Food Catering Registrations</h4>
+                    <div class="d-flex justify-content-end">
+                        <a href="{{ route('admin.food-catering.create') }}" class="btn btn-sm btn-primary view-btn">
+                            Create Food Catering
+                        </a>
+                    </div>
                 </div>
 
                 <div class="card-body">
@@ -18,33 +23,47 @@
                             <thead>
                                 <tr>
                                     <th>SN</th>
-                                    <th>User Type</th>
+                                    <th>Service Provider</th>
                                     <th>Name</th>
-                                    <th>Mandap For</th>
-                                    <th>Guests</th>
-                                    <th>Date</th>
-                                    <th>Category</th>
+                                    <th>Contact</th>
+                                  
+                                    <th>Experience</th>
                                     <th>Location</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
 
                             <tbody>
-                                @forelse ($mandaps as $item)
+                                @forelse ($foodCaterings as $item)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $item->user_type }}</td>
                                         <td>{{ $item->full_name }}</td>
-                                        <td>{{ $item->mandap_for }}</td>
-                                        <td>{{ $item->guest_count }}</td>
-                                        <td>{{ $item->preferred_date }}</td>
-                                        <td>{{ $item->venue_category }}</td>
+                                        <td>{{ $item->user->contact_number }}</td>
+                                       
+                                        <td>{{ $item->experience_years }} yrs</td>
                                         <td>{{ $item->location }}</td>
                                         <td>
+                                            <a href="{{ route('admin.food-catering.edit', $item->id) }}"
+                                                class="btn btn-sm btn-primary view-btn">
+                                                Edit
+                                            </a>
                                             <button type="button" class="btn btn-sm btn-primary view-btn"
                                                 data-item='@json($item)'>
                                                 View
                                             </button>
+                                            <form action="{{ route('admin.food-catering.destroy', $item->id) }}"
+                                                method="POST"
+                                                onsubmit="return confirm('Are you sure you want to delete this food catering?');"
+                                                style="display:inline-block;">
+
+                                                @csrf
+                                                @method('DELETE')
+
+                                                <button type="submit" class="btn btn-sm btn-danger">
+                                                    Delete
+                                                </button>
+                                            </form>
                                         </td>
                                     </tr>
                                 @empty
@@ -57,7 +76,7 @@
                             </tbody>
                         </table>
                         <div class="d-flex justify-content-center mt-3">
-                            {{ $mandaps->links() }}
+                            {{ $foodCaterings->links() }}
                         </div>
                     </div>
                 </div>
@@ -71,7 +90,7 @@
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Mandap Details</h5>
+                    <h5 class="modal-title">Food Catering Details</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
@@ -97,27 +116,42 @@
                     const item = JSON.parse(this.dataset.item);
                     let html = '';
 
+                    // 🔹 Date formatter
+                    const formatDate = (date) => {
+                        if (!date) return 'N/A';
+                        return new Date(date).toLocaleDateString('en-IN', {
+                            day: '2-digit',
+                            month: 'short',
+                            year: 'numeric'
+                        });
+                    };
+
                     const fields = {
-                        'User Type': item.user_type,
-                        'Mandap For': item.mandap_for,
-                        'Other Event': item.other_event ?? 'N/A',
-                        'Full Name': item.full_name,
-                        'Email': item.email ?? 'N/A',
+                        'User Type': item.user_type ?? 'N/A',
+
+                        // 👤 USER TABLE DATA (from relation)
+                        'Full Name': item.user?.name ?? item.full_name ?? 'N/A',
+                        'Email': item.user?.email ?? 'N/A',
+                        'Contact Number': item.user?.contact_number ?? 'N/A',
+
                         'Gender': item.gender ?? 'N/A',
-                        'DOB': item.dob ?? 'N/A',
-                        'Contact Number': item.contact_number,
+                        'DOB': formatDate(item.dob),
                         'WhatsApp Number': item.whatsapp_number ?? 'N/A',
-                        'Place Name': item.place_name,
-                        'Guest Count': item.guest_count,
-                        'Location': item.location,
-                        'Preferred Date': item.preferred_date,
-                        'Venue Category': item.venue_category,
-                        'Additional Requirements': item.additional_requirements ?? 'N/A',
-                        'Created At': item.created_at
+                        'Qualification': item.qualification ?? 'N/A',
+                        'Experience (Years)': item.experience_years ?? 'N/A',
+                        'Location': item.location ?? 'N/A',
+                        'Looking For': item.looking_for ?? 'N/A',
+                        'Other Service': item.other_service ?? 'N/A',
+                        'Registered At': formatDate(item.created_at)
                     };
 
                     for (const key in fields) {
-                        html += `<tr><th>${key}</th><td>${fields[key]}</td></tr>`;
+                        html += `
+                <tr>
+                    <th>${key}</th>
+                    <td>${fields[key]}</td>
+                </tr>
+            `;
                     }
 
                     document.getElementById('modalBody').innerHTML = html;

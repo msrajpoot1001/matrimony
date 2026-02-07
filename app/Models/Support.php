@@ -14,7 +14,6 @@ class Support extends Model
      */
     protected $fillable = [
         'ref_id',
-        'user_type',
         'full_name',
         'gender',
         'dob',

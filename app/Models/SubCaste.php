@@ -17,4 +17,9 @@ class SubCaste extends Model
         return $this->hasMany(SubCaste::class, 'ref_id');
     }
 
+    public function matchMakings()
+    {
+        return $this->hasMany(MatchMaking::class);
+    }
+
 }

@@ -563,8 +563,8 @@
                                     </div>
 
                                     <div class="about__content">
-                                        <h4>{{ $item->name }}</h4>
-                                        <h5>({{ $item->position }})</h5>
+                                        <h4 style="min-height: 4rem">{{ $item->name }}</h4>
+                                        {{-- <h5>({{ $item->position }})</h5> --}}
 
                                         <p>{{ \Illuminate\Support\Str::words(strip_tags($item->description), 10, '...') }}
                                         </p>

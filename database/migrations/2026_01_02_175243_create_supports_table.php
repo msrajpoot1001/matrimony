@@ -17,7 +17,6 @@ return new class extends Migration
                 ->cascadeOnDelete();
 
             /* ================= CONTRIBUTOR DETAILS ================= */
-            $table->string('user_type')->nullable();
             $table->string('full_name');
             $table->string('gender')->nullable();
             $table->date('dob')->nullable();

@@ -12,7 +12,8 @@
             padding: 90px 20px;
             /* color: #fff; */
             text-align: center;
-            border-radius: 0 0 40px 40px;
+            margin-top: 2rem;
+            border-radius: 40px;
         }
 
         .profiles-hero h1 {
@@ -47,7 +48,7 @@
         .profile-img img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
             transition: .4s;
         }
 
@@ -116,7 +117,7 @@
 
         .view-profile {
             color: white !important;
-            background: var(--primary-color) !important;
+            background: var(--primary-color4) !important;
             border: none !important;
         }
 
@@ -125,9 +126,49 @@
         }
 
         .application_id {
-            color: #8b0000 !important;
+            color: var(--orange-color) !important;
         }
     </style>
+@endsection
+
+@section('script')
+    {{-- SCRIPT --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.view-profile').forEach(btn => {
+                btn.addEventListener('click', function() {
+
+                    modalName.innerText = this.dataset.name;
+                    modalApplicationId.innerText = this.dataset.application_id;
+                    modalPhoto.src = this.dataset.photo;
+                    modalAge.innerText = this.dataset.age;
+                    modalGender.innerText = this.dataset.gender;
+                    modalReligion.innerText = this.dataset.religion;
+                    modalHeight.innerText = this.dataset.height ?? '—';
+                    modalMarital.innerText = this.dataset.marital;
+                    modalEducation.innerText = this.dataset.education;
+                    modalProfession.innerText = this.dataset.profession;
+                    modalBirthPlace.innerText = this.dataset.birthplace;
+                    modalBirthTime.innerText = this.dataset.birthtime ?? '—';
+                    modalFather.innerText = this.dataset.father;
+                    modalMother.innerText = this.dataset.mother;
+                    modalFatherOccupation.innerText = this.dataset.fatherOccupation ?? '—';
+                    modalMotherOccupation.innerText = this.dataset.motherOccupation ?? '—';
+                    modalCaste.innerText = this.dataset.caste ?? '—';
+                    modalSubCaste.innerText = this.dataset.subCaste ?? '—';
+
+
+                    const rawWhatsapp = this.dataset.whatsapp ?? '';
+                    const cleanWhatsapp = rawWhatsapp.replace(/\D/g, ''); // remove +, space, -
+
+                    modalWhatsapp.href = cleanWhatsapp ?
+                        'https://wa.me/' + cleanWhatsapp :
+                        '#';
+
+                });
+            });
+        });
+    </script>
 @endsection
 
 @section('content')
@@ -135,7 +176,7 @@
     {{-- HERO --}}
     <section class="profiles-hero">
         <div class="container">
-            <h1 >Find Your Perfect Match</h1>
+            <h1>Find Your Perfect Match</h1>
             <p>Verified profiles • Trusted matrimony service</p>
         </div>
     </section>
@@ -164,21 +205,25 @@
                                 <h5 class="mb-1">{{ $profile->candidate_name }}</h5>
 
                                 <p class="text-muted small mb-2">
+
                                     {{ \Carbon\Carbon::parse($profile->dob)->age }} yrs •
-                                    {{ $profile->height ? $profile->height . '"' : '—' }} •
+                                    {{ $profile->height ? $profile->height . ' ft"' : '—' }} •
                                     {{ $profile->religion }}
                                 </p>
 
                                 <ul class="profile-info list-unstyled small mb-3">
-                                    <li><strong>Caste:</strong> {{ $profile->caste }}</li>
+                                    <li><strong>Caste:</strong> {{ $profile->caste?->name }}</li>
+                                    <li><strong>Sub Caste:</strong> {{ $profile->subCaste?->name }}</li>
                                     <li><strong>Education:</strong> {{ $profile->qualification }}</li>
                                     <li><strong>Profession:</strong> {{ $profile->employment_status }}</li>
                                     <li><strong>Location:</strong> {{ $profile->birth_place }}</li>
+                                    <li><strong>Location:</strong> {{ $profile->mother_occupation }}</li>
+
                                     <li><strong>Make contact as:</strong> +91- XXXXXXXXXX</li>
 
                                 </ul>
 
-                                <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center gap-2">
                                     <a href="javascript:void(0)" class="btn btn-outline-primary btn-sm view-profile"
                                         data-bs-toggle="modal" data-bs-target="#profileModal"
                                         data-application_id="{{ $profile->application_id }}"
@@ -190,23 +235,25 @@
                                         data-education="{{ $profile->qualification }}"
                                         data-profession="{{ $profile->employment_status }}"
                                         data-birthplace="{{ $profile->birth_place }}"
-                                        data-birthtime="{{ $profile->birth_time }}"
+                                        data-birthtime="{{ \Carbon\Carbon::parse($profile->birth_time)->format('h:i A') }}"
                                         data-father="{{ $profile->father_name }}"
-                                        data-mother="{{ $profile->mother_name }}" data-whatsapp="{{ $company->phone }}"
-                                        data-caste="{{ $profile->caste ?? '' }}"
-                                        data-sub-caste="{{ $profile->sub_caste ?? '' }}">
-
-                                        <i class="bi bi-person"></i>
-
-                                        View Profile
+                                        data-father-occupation="{{ $profile->father_occupation }}"
+                                        data-mother="{{ $profile->mother_name }}"
+                                        data-mother-occupation="{{ $profile->mother_occupation }}"
+                                        data-whatsapp="{{ $company->phone1 }}"
+                                        data-caste="{{ $profile->caste?->name ?? '' }}"
+                                        data-sub-caste="{{ $profile->subCaste?->name ?? '' }}">
+                                        <i class="bi bi-person"></i> View Profile
                                     </a>
 
-                                    <a href="https://wa.me/{{ $company->phone1 }}" class="btn btn-success btn-sm"
-                                        target="_blank">
-                                        <i class="bi bi-whatsapp" style="color:white"></i>
-                                        WhatsApp
+
+                                    <a href="https://wa.me/{{ preg_replace('/\D/', '', $company->phone1) }}"
+                                        class="btn btn-success btn-sm" target="_blank">
+                                        <i class="bi bi-whatsapp text-white"></i> WhatsApp
                                     </a>
+
                                 </div>
+
 
                             </div>
                         </div>
@@ -272,8 +319,10 @@
                             <hr>
 
                             <h6 class="fw-bold">Family Details</h6>
-                            <p>Father: <span id="modalFather"></span></p>
-                            <p>Mother: <span id="modalMother"></span></p>
+                            <p><strong>Father:</strong> <span id="modalFather"></span> ( <span
+                                    id="modalFatherOccupation"></span> )</p>
+                            <p><strong>Mother: </strong><span id="modalMother"></span> ( <span
+                                    id="modalMotherOccupation"></span> )</p>
 
                             <a id="modalWhatsapp" class="btn btn-success mt-3" target="_blank">
                                 <i class="bi bi-whatsapp" style="color:white"></i> Contact on WhatsApp
@@ -286,33 +335,6 @@
         </div>
     </div>
 
-    {{-- SCRIPT --}}
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.view-profile').forEach(btn => {
-                btn.addEventListener('click', function() {
 
-                    modalName.innerText = this.dataset.name;
-                    modalApplicationId.innerText = this.dataset.application_id;
-                    modalPhoto.src = this.dataset.photo;
-                    modalAge.innerText = this.dataset.age;
-                    modalGender.innerText = this.dataset.gender;
-                    modalReligion.innerText = this.dataset.religion;
-                    modalHeight.innerText = this.dataset.height ?? '—';
-                    modalMarital.innerText = this.dataset.marital;
-                    modalEducation.innerText = this.dataset.education;
-                    modalProfession.innerText = this.dataset.profession;
-                    modalBirthPlace.innerText = this.dataset.birthplace;
-                    modalBirthTime.innerText = this.dataset.birthtime ?? '—';
-                    modalFather.innerText = this.dataset.father;
-                    modalCaste.innerText = this.dataset.caste ?? '—';
-                    modalSubCaste.innerText = this.dataset.subCaste ?? '—';
-
-
-                    modalWhatsapp.href = 'https://wa.me/' + this.dataset.whatsapp;
-                });
-            });
-        });
-    </script>
 
 @endsection

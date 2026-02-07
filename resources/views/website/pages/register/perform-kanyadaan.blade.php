@@ -235,10 +235,10 @@
                                         </div>
 
                                         <div class="col-6">
-                                            <label>Transaction Id</label>
+                                            <label>Transaction Id <span class="astrick">*</span></label>
                                             <div class="banner__inputlist">
                                                 <input type="text" name="transction_id" placeholder="Transaction Id"
-                                                    value="{{ old('transction_id') }}">
+                                                    value="{{ old('transction_id') }}" required>
                                             </div>
                                             @error('transction_id')
                                                 <small class="text-danger">{{ $message }}</small>

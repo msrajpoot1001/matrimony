@@ -23,7 +23,6 @@ class MatchMaking extends Model
         /* BASIC DETAILS */
         'looking_for',
         'candidate_name',
-        'email',
         'gender',
         'dob',
         'height',
@@ -31,8 +30,8 @@ class MatchMaking extends Model
         /* PERSONAL & RELIGION */
         'marital_status',
         'religion',
-        'caste',
-        'sub_caste',
+        'caste_id',
+        'sub_caste_id',
         'manglik_status',
         'interest_inter_caste',
 
@@ -106,5 +105,16 @@ class MatchMaking extends Model
 
             $model->application_id = $prefix . $newNumber;
         });
+    }
+
+    
+    public function caste()
+    {
+        return $this->belongsTo(Caste::class);
+    }
+
+    public function subCaste()
+    {
+        return $this->belongsTo(SubCaste::class);
     }
 }

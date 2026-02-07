@@ -212,11 +212,11 @@
                     <li>
                         <a href="javascript:void(0);" class="has-arrow">
                             <i class="bx bx-id-card nav-icon"></i>
-                            <span class="menu-item">Register Records</span>
+                            <span class="menu-item">Services</span>
                         </a>
                         <ul class="sub-menu">
                             <li>
-                                <a href="{{ route('admin.match.making.index') }}">
+                                <a href="{{ route('admin.match-making.index') }}">
                                     <i class="bx bx-heart nav-icon"></i>
                                     <span class="menu-item"> Match Making</span>
                                 </a>
@@ -243,21 +243,21 @@
                             </li>
 
                             <li>
-                                <a href="{{ route('admin.food.catering.index') }}">
+                                <a href="{{ route('admin.food-catering.index') }}">
                                     <i class="bx bx-dish nav-icon"></i>
                                     <span class="menu-item">Food & Catering</span>
                                 </a>
                             </li>
 
                             <li>
-                                <a href="{{ route('admin.event.management.index') }}">
+                                <a href="{{ route('admin.event-management.index') }}">
                                     <i class="bx bx-calendar-event nav-icon"></i>
                                     <span class="menu-item">Event Management</span>
                                 </a>
                             </li>
 
                             <li>
-                                <a href="{{ route('admin.karma.training.index') }}">
+                                <a href="{{ route('admin.karma-training.index') }}">
                                     <i class="bx bx-book-open nav-icon"></i>
                                     <span class="menu-item">Karma Training</span>
                                 </a>
@@ -271,29 +271,11 @@
                             </li>
 
                             <li>
-                                <a href="{{ route('admin.perform.kanyadan.index') }}">
+                                <a href="{{ route('admin.perform-kanyadan.index') }}">
                                     <i class="bx bx-heart nav-icon"></i>
                                     <span class="menu-item">Perform Kanyadan</span>
                                 </a>
                             </li>
-
-                        </ul>
-                    </li>
-
-                    <!-- Register -->
-                    <li>
-                        <a href="javascript:void(0);" class="has-arrow">
-                            <i class="bx bx-id-card nav-icon"></i>
-                            <span class="menu-item">Register Create</span>
-                        </a>
-                        <ul class="sub-menu">
-                            <li>
-                                <a href="{{ route('admin.match.making.index') }}">
-                                    <i class="bx bx-heart nav-icon"></i>
-                                    Match Making
-                                </a>
-                            </li>
-
 
                         </ul>
                     </li>
@@ -434,7 +416,7 @@
                                         Sub Caste
                                     </a>
                                 </li>
-                             
+
                             </ul>
                         </li>
 

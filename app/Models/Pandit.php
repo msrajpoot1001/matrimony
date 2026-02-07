@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -7,19 +6,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Pandit extends Model
 {
-    //
     use SoftDeletes;
 
-    /**
-     * The attributes that are mass assignable.
-     */
     protected $fillable = [
+        'ref_id',
         'user_type',
-         'name',
-        'email',
+        'name',
         'gender',
         'dob',
-        'contact_number',
         'whatsapp_number',
         'qualification',
         'experience_years',
@@ -32,11 +26,17 @@ class Pandit extends Model
         'delete_reason',
     ];
 
-    /**
-     * The attributes that should be cast.
-     */
     protected $casts = [
-        'deleted_at' => 'datetime',
+        'dob'              => 'date',
         'services_offered' => 'array',
+        'deleted_at'       => 'datetime',
     ];
+
+    /**
+     * 🔗 Pandit belongs to User
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'ref_id');
+    }
 }

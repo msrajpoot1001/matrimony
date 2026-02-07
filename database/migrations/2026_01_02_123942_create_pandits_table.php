@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,22 +12,28 @@ return new class extends Migration
     {
         Schema::create('pandits', function (Blueprint $table) {
             $table->id();
+
+            // 🔗 USER RELATION
+            $table->foreignId('ref_id')
+                  ->constrained('users')
+                  ->cascadeOnDelete();
+
             $table->string('name');
-             $table->string('user_type')->nullable();
-            $table->string('email')->nullable();
+            $table->string('user_type')->nullable();
             $table->string('gender')->nullable();
             $table->date('dob')->nullable();
-            $table->string('contact_number');
             $table->string('whatsapp_number')->nullable();
             $table->string('qualification');
             $table->integer('experience_years');
             $table->string('location');
-           $table->json('services_offered');
+            $table->json('services_offered');
             $table->string('other_service')->nullable();
             $table->text('add_require')->nullable();
-            
+
             $table->timestamps();
-            $table->softDeleteWithMeta(); // ✅ auto included in all new tables
+
+            // soft delete with meta
+            $table->softDeleteWithMeta();
         });
     }
 
@@ -37,6 +42,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('register_pandit');
+        Schema::dropIfExists('pandits');
     }
 };

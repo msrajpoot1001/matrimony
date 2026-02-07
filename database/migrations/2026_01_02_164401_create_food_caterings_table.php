@@ -18,12 +18,9 @@ return new class extends Migration
 
             $table->string('user_type')->nullable();
             $table->string('full_name');
-            $table->string('email')->nullable();
             $table->string('gender')->nullable();
             $table->date('dob')->nullable();
-            $table->string('contact_number');
             $table->string('whatsapp_number')->nullable();
-            $table->string('qualification')->nullable();
             $table->integer('experience_years');
             $table->string('location');
             $table->string('looking_for');

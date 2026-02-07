@@ -78,5 +78,11 @@ public function mandaps()
     return $this->hasMany(Mandap::class, 'ref_id');
 }
 
+public function pandits()
+{
+    return $this->hasMany(Pandit::class, 'ref_id');
+}
+
+
 
 }

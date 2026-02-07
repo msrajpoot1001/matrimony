@@ -20,7 +20,6 @@ class EventManagement extends Model
         'full_name',
         'gender',
         'dob',
-        'contact_number',
         'whatsapp_number',
         'experience_years',
         'location',

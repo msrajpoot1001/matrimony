@@ -641,7 +641,7 @@
                                         <div class="col-6">
                                             <label>Caste <span class="astrick">*</span></label>
                                             <div class="banner__inputlist">
-                                                <select name="caste" id="casteSelect" required data-label="Caste"
+                                                <select name="caste_id" id="casteSelect" required data-label="Caste"
                                                     class="form-control">
 
                                                     <option value="">-- Select Caste --</option>
@@ -661,7 +661,7 @@
                                         <div class="col-6">
                                             <label>Sub Caste</label>
                                             <div class="banner__inputlist">
-                                                <select name="sub_caste" id="subCasteSelect" class="form-control"
+                                                <select name="sub_caste_id" id="subCasteSelect" class="form-control"
                                                     data-label="Sub Caste">
                                                     <option value="">-- Select Sub Caste --</option>
                                                     @if (old('caste') && $subCastes)

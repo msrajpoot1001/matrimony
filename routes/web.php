@@ -8,6 +8,7 @@ use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\MailVerificationController;
 use App\Http\Controllers\AdvertisementController;
 use App\Http\Controllers\AstroProductsController;
+use App\Http\Controllers\MemberRoleConroller;
 
 
 
@@ -50,8 +51,8 @@ use App\Http\Controllers\{
   
 };
 
-
-
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\OrderController;
 
 
 // Frontend pages -> general pages
@@ -74,57 +75,44 @@ Route::get('/get-sub-castes/{casteId}', [CasteController::class, 'getSubCastes']
 
 
 // Match Making 
-Route::get('/register/match-making', [MatchMakingController::class, 'create'])->name('match.making.create');
+Route::get('/register/match-making', [MatchMakingController::class, 'createF'])->name('match.making.create');
 Route::post('/store/match-making', [MatchMakingController::class, 'store'])->name('match.making.store');
-Route::get('/admin/match-making', [MatchMakingController::class, 'index'])->name('admin.match.making.index');
 
 //Astrology
-Route::get('/register/astrology', [AstrologyController::class, 'create'])->name('astrology.create');
-Route::get('/admin/register/astrology', [AstrologyController::class, 'adminCreate'])->name('admin.astrology.create');
 Route::post('/store/astrology', [AstrologyController::class, 'store'])->name('astrology.store');
-Route::get('/admin/astrology', [AstrologyController::class, 'index'])->name('admin.astrology.index');
-
+Route::get('/register/astrology', [AstrologyController::class, 'createF'])->name('astrology.create');
 
 // Mandap 
-Route::get('/register/mandap', [MandapController::class, 'create'])->name('mandap.create');
+Route::get('/register/mandap', [MandapController::class, 'createF'])->name('mandap.create');
 Route::post('/store/mandap', [MandapController::class, 'store'])->name('mandap.store');
-Route::get('/admin/mandap', [MandapController::class, 'index'])->name('admin.mandap.index');
-
 
 // Pandit 
-Route::get('/register/pandit', [PanditController::class, 'create'])->name('pandit.create');
+Route::get('/register/pandit', [PanditController::class, 'createF'])->name('pandit.create');
 Route::post('/store/pandit', [PanditController::class, 'store'])->name('pandit.store');
-Route::get('/admin/pandit', [PanditController::class, 'index'])->name('admin.pandit.index');
 
 
 // Food Catering 
-Route::get('/register/food-catering', [FoodCateringController::class, 'create'])->name('food.catering.create');
+Route::get('/register/food-catering', [FoodCateringController::class, 'createF'])->name('food.catering.create');
 Route::post('/store/food-catering', [FoodCateringController::class, 'store'])->name('food.catering.store');
-Route::get('/admin/food-catering', [FoodCateringController::class, 'index'])->name('admin.food.catering.index');
 
 
 // Event Management admin.event.management.index
-Route::get('/register/event-management', [EventManagementController::class, 'create'])->name('event.management.create');
+Route::get('/register/event-management', [EventManagementController::class, 'createF'])->name('event.management.create');
 Route::post('/store/event-management', [EventManagementController::class, 'store'])->name('event.management.store');
-Route::get('/admin/event-management', [EventManagementController::class, 'index'])->name('admin.event.management.index');
 
 
 // Karma Training 
-Route::get('/register/karma-training', [KarmaTrainingController::class, 'create'])->name('karma.training.create');
+Route::get('/register/karma-training', [KarmaTrainingController::class, 'createF'])->name('karma.training.create');
 Route::post('/store/karma-training', [KarmaTrainingController::class, 'store'])->name('karma.training.store');
-Route::get('/admin/karma-training', [KarmaTrainingController::class, 'index'])->name('admin.karma.training.index');
-
 
 // Supoort  
-Route::get('/register/support', [SupportController::class, 'create'])->name('support.create');
+Route::get('/register/support', [SupportController::class, 'createF'])->name('support.create');
 Route::post('/store/support', [SupportController::class, 'store'])->name('support.store');
-Route::get('/admin/support', [SupportController::class, 'index'])->name('admin.support.index');
 
 
 // Perform Kanyadan
 Route::get('/register/perform-kanyadan', [PerformKanyadanController::class, 'create'])->name('perform.kanyadan.create');
 Route::post('/store/perform-kanyadan', [PerformKanyadanController::class, 'store'])->name('perform.kanyadan.store');
-Route::get('/admin/perform-kanyadan', [PerformKanyadanController::class, 'index'])->name('admin.perform.kanyadan.index');
 
 
 
@@ -157,6 +145,17 @@ Route::post('/verify-otp', [App\Http\Controllers\Auth\OtpController::class, 'ver
     ->name('verify.otp.post');
 
 
+Route::post('/buy/{productId}', [PaymentController::class, 'createOrder'])
+    ->name('buy.create');
+
+
+Route::post('/payment/verify', [PaymentController::class, 'verifyPayment'])
+    ->name('payment.verify');
+
+Route::get('/order-success/{order}', [PaymentController::class, 'success'])
+    ->name('order.success');
+
+
 
 
 
@@ -181,6 +180,8 @@ Route::middleware(['auth', 'role:admin'])
         // Users
         Route::resource('members', MemberManagementController::class)
             ->only(['index', 'edit', 'update']);
+
+        Route::resource('member-role', MemberRoleConroller::class);
 
         Route::get('/member-profile/{user?}', [MemberManagementController::class, 'memberProfile'])
             ->name('member-profile');
@@ -289,6 +290,31 @@ Route::middleware(['auth', 'role:admin'])
         
         // SubCasteController
         Route::resource('sub-caste', SubCasteController::class);
+
+        Route::resource('astrology', AstrologyController::class);
+
+        Route::resource('mandap', MandapController::class);
+         
+        Route::resource('pandit', PanditController::class);
+
+        Route::resource('food-catering', FoodCateringController::class);
+
+        Route::resource('event-management', EventManagementController::class);
+
+        Route::resource('karma-training', KarmaTrainingController::class);
+
+        Route::resource('support', SupportController::class);
+
+        Route::resource('perform-kanyadan', PerformKanyadanController::class);
+
+        Route::resource('match-making', MatchMakingController::class);
+
+        Route::get('/astro/orders', [OrderController::class, 'index'])->name('astro.product.order');
+
+
+        
+        
+
 
     });
 

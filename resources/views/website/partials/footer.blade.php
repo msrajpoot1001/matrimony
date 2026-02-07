@@ -33,7 +33,7 @@
 </style>
 
 <style>
-    
+
 </style>
 
 
@@ -41,7 +41,7 @@
 
 <!-- ================> Footer section start here <================== -->
 <footer class="footer footer--style2">
-    <div class="footer__top bg_img" style="background-image: url(assets/images/footer/bg2.png)">
+    <div class="footer__top bg_img" style="background-image: url('{{ asset('assets/images/footer/bg2.png') }}')">
 
         <!-- Newsletter -->
         <div class="footer__newsletter wow fadeInUp" data-wow-duration="1.5s">

@@ -14,6 +14,12 @@ return [
     |
     */
 
+    'razorpay' => [
+    'key'    => env('RAZORPAY_KEY'),
+    'secret' => env('RAZORPAY_SECRET'),
+    ],
+
+
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),
     ],

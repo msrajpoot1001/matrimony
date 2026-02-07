@@ -102,7 +102,142 @@
         label {
             color: var(--blue-color);
         }
+
+        .astrick {
+            color: red;
+
+        }
     </style>
+@endsection
+
+@section('script')
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <script>
+        document.getElementById('buyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const formData = {
+                name: document.querySelector('[name=name]').value.trim(),
+                phone: document.querySelector('[name=phone]').value.trim(),
+                email: document.querySelector('[name=email]').value.trim(),
+                pincode: document.querySelector('[name=pincode]').value.trim(),
+                address: document.querySelector('[name=address]').value.trim(),
+            };
+
+            fetch("{{ route('buy.create', $product) }}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                })
+                .then(async res => {
+                    const text = await res.text();
+
+                    // 🔥 Debug once if needed
+                    console.log('RAW RESPONSE:', text);
+
+                    try {
+                        return JSON.parse(text);
+                    } catch (e) {
+                        throw new Error('Server did not return JSON');
+                    }
+                })
+                .then(data => {
+                    console.log('PARSED RESPONSE:', data);
+
+                    // ✅ Handle Laravel validation (default format)
+                    if (data.errors && Object.keys(data.errors).length > 0) {
+                        let msg = Object.values(data.errors)
+                            .map(err => err[0])
+                            .join('\n');
+                        alert(msg);
+                        return;
+                    }
+
+                    // ✅ Handle custom failure
+                    if (data.success === false) {
+                        alert(data.message || 'Unable to create order');
+                        return;
+                    }
+
+                    // ❌ Safety check
+                    if (!data.order_id || !data.key) {
+                        alert('Payment initialization failed');
+                        return;
+                    }
+
+                    // ✅ Razorpay options
+                    const options = {
+                        key: data.key,
+                        amount: data.amount,
+                        currency: "INR",
+                        name: "Prajapati Ghatasutra",
+                        description: "Product Purchase",
+                        order_id: data.order_id,
+                        prefill: {
+                            name: data.name,
+                            email: data.email || '',
+                            contact: data.phone
+                        },
+                        handler: function(response) {
+                            console.log('RAZORPAY RESPONSE:', response);
+
+                            const payload = {
+                                razorpay_payment_id: response.razorpay_payment_id,
+                                razorpay_order_id: response.razorpay_order_id,
+                                razorpay_signature: response.razorpay_signature,
+
+                                // ✅ extra data (safe to send)
+                                product_id: "{{ $product->id }}"
+                            };
+
+                            fetch("{{ route('payment.verify') }}", {
+                                    method: "POST",
+                                    headers: {
+                                        'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                                        'Accept': 'application/json',
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify(payload)
+                                })
+                                .then(res => res.json())
+                                .then(result => {
+                                    console.log('VERIFY RESPONSE:', result);
+
+                                    if (result.success) {
+
+                                        document.getElementById('successOrderId').innerText =
+                                            'Order ID: ' + response.razorpay_order_id;
+
+                                        document.getElementById('successPaymentId').innerText =
+                                            'Payment ID: ' + response.razorpay_payment_id;
+
+                                        const successModal = new bootstrap.Modal(
+                                            document.getElementById('paymentSuccessModal')
+                                        );
+                                        successModal.show();
+
+                                    } else {
+                                        alert(result.message || 'Payment verification failed');
+                                    }
+                                });
+                        }
+
+
+                    };
+
+                    new Razorpay(options).open();
+                })
+                .catch(error => {
+                    alert('Something went wrong. Please try again.');
+                    console.error('FETCH ERROR:', error);
+                });
+        });
+    </script>
 @endsection
 
 @section('content')
@@ -138,13 +273,13 @@
 
         </div>
         <div class="form-section">
-            <form class="buy-form" method="POST" action="#">
+            <form id="buyForm" class="buy-form" method="POST">
                 @csrf
 
                 <div class="row">
 
                     <div class="col-lg-6">
-                        <label>Full Name</label>
+                        <label>Full Name <span class="astrick">*</span></label>
                         <input type="text" name="name" placeholder="Enter your full name" value="{{ old('name') }}"
                             required>
                         @error('name')
@@ -153,7 +288,7 @@
                     </div>
 
                     <div class="col-lg-6">
-                        <label>Mobile Number</label>
+                        <label>Mobile Number <span class="astrick">*</span></label>
                         <input type="tel" name="phone" placeholder="Enter your mobile number"
                             value="{{ old('phone') }}" required>
                         @error('phone')
@@ -162,16 +297,16 @@
                     </div>
 
                     <div class="col-lg-6">
-                        <label>Email Address</label>
+                        <label>Email Address <span class="astrick">*</span></label>
                         <input type="email" name="email" placeholder="Enter your email address"
-                            value="{{ old('email') }}">
+                            value="{{ old('email') }}" required>
                         @error('email')
                             <small class="text-danger">{{ $message }}</small>
                         @enderror
                     </div>
 
                     <div class="col-lg-6">
-                        <label>Pincode</label>
+                        <label>Pincode <span class="astrick">*</span></label>
                         <input type="text" name="pincode" placeholder="Enter delivery pincode"
                             value="{{ old('pincode') }}">
                         @error('pincode')
@@ -180,7 +315,7 @@
                     </div>
 
                     <div class="col-lg-12">
-                        <label>Delivery Address</label>
+                        <label>Delivery Address <span class="astrick">*</span></label>
                         <textarea name="address" rows="3" placeholder="Enter complete delivery address">{{ old('address') }}</textarea>
                         @error('address')
                             <small class="text-danger">{{ $message }}</small>
@@ -197,5 +332,30 @@
             </form>
 
         </div>
+
+        <!-- Payment Success Modal -->
+        <div class="modal fade" id="paymentSuccessModal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header  text-white" style="background: var(--orange-color)">
+                        <h5 class="modal-title" style="color:white">Payment Successful 🎉</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body text-center">
+                        <p class="mb-2"><strong>Thank you for your order!</strong></p>
+                        <p id="successOrderId"></p>
+                        <p id="successPaymentId"></p>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button class="btn " data-bs-dismiss="modal" style="background: var(--orange-color);color:white">
+                            Continue
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 @endsection

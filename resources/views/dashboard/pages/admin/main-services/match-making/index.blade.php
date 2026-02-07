@@ -1,7 +1,6 @@
 @extends('dashboard.layouts.app')
 
 @section('title', 'Match Making Records')
-
 @section('script')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -10,8 +9,15 @@
                 if (!dateStr) return 'N/A';
                 const d = new Date(dateStr);
                 if (isNaN(d)) return 'N/A';
-                return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+
+                return d.toLocaleDateString('en-IN', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric'
+                });
             }
+
+            const modal = new bootstrap.Modal(document.getElementById('viewModal'));
 
             document.querySelectorAll('.view-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
@@ -20,55 +26,60 @@
                     let rows = '';
 
                     const fields = {
-                        'Application ID': item.application_id,
-                        'Looking For': item.looking_for,
-                        'Candidate Name': item.candidate_name,
-                        'Email': item.email,
-                        'Gender': item.gender,
+                        'Application ID': item.application_id ?? 'N/A',
+                        'Looking For': item.looking_for ?? 'N/A',
+                        'Candidate Name': item.candidate_name ?? 'N/A',
+
+                        // ✅ FROM USER TABLE
+                        'Email': item.user?.email ?? 'N/A',
+                        'Contact Number': item.user?.contact_number ?? 'N/A',
+
+                        'Gender': item.gender ?? 'N/A',
                         'Date of Birth': formatDate(item.dob),
                         'Height': item.height ? item.height + ' inches' : 'N/A',
-                        'Contact Number': item.contact_number,
-                        'WhatsApp Number': item.whatsapp_number,
+                        'WhatsApp Number': item.whatsapp_number ?? 'N/A',
 
-                        'Marital Status': item.marital_status,
-                        'Religion': item.religion,
-                        'Caste': item.caste,
-                        'Sub Caste': item.sub_caste,
-                        'Manglik Status': item.manglik_status,
-                        'Inter-Caste Marriage': item.interest_inter_caste,
+                        'Marital Status': item.marital_status ?? 'N/A',
+                        'Religion': item.religion ?? 'N/A',
+                        'Caste': item.caste?.name ?? 'N/A',
+                        'Sub Caste': item.sub_caste?.name ?? 'N/A',
+                        'Manglik Status': item.manglik_status ?? 'N/A',
+                        'Inter-Caste Marriage': item.interest_inter_caste ?? 'N/A',
 
-                        'Qualification': item.qualification,
-                        'Company Name': item.company_name,
-                        'Designation': item.designation,
-                        'Place of Work': item.place_of_work,
-                        'Experience (Years)': item.year_of_experience,
-                        'Employment Status': item.employment_status,
-                        'Annual Income': item.annual_income,
+                        'Qualification': item.qualification ?? 'N/A',
+                        'Company Name': item.company_name ?? 'N/A',
+                        'Designation': item.designation ?? 'N/A',
+                        'Place of Work': item.place_of_work ?? 'N/A',
+                        'Experience (Years)': item.year_of_experience ?? 'N/A',
+                        'Employment Status': item.employment_status ?? 'N/A',
+                        'Annual Income': item.annual_income ?? 'N/A',
 
-                        'Father Name': item.father_name,
-                        'Father Occupation': item.father_occupation,
-                        'Mother Name': item.mother_name,
-                        'Mother Occupation': item.mother_occupation,
-                        'Family Income': item.family_income,
-                        'Family Status': item.family_status,
-                        'Family Values': item.family_values,
-                        'Living With Family': item.living_with_family,
-                        'Living At': item.living_at,
-                        'Ancestral Origin': item.ancestral_origin,
+                        'Father Name': item.father_name ?? 'N/A',
+                        'Father Occupation': item.father_occupation ?? 'N/A',
+                        'Mother Name': item.mother_name ?? 'N/A',
+                        'Mother Occupation': item.mother_occupation ?? 'N/A',
+                        'Family Income': item.family_income ?? 'N/A',
+                        'Family Status': item.family_status ?? 'N/A',
+                        'Family Values': item.family_values ?? 'N/A',
+                        'Living With Family': item.living_with_family ?? 'N/A',
+                        'Living At': item.living_at ?? 'N/A',
+                        'Ancestral Origin': item.ancestral_origin ?? 'N/A',
 
-                        'Birth Place': item.birth_place,
-                        'Birth Time': item.birth_time,
-                        'Kundali Details': item.kundali_details,
+                        'Birth Place': item.birth_place ?? 'N/A',
+                        'Birth Time': item.birth_time ?? 'N/A',
+                        'Kundali Details': item.kundali_details ?? 'N/A',
                     };
 
                     for (const [label, value] of Object.entries(fields)) {
                         rows += `
                     <tr>
                         <th width="35%">${label}</th>
-                        <td>${value ?? 'N/A'}</td>
+                        <td>${value}</td>
                     </tr>
                 `;
                     }
+
+                    /* ================= FILES ================= */
 
                     if (item.full_photo) {
                         rows += `
@@ -104,12 +115,13 @@
                     }
 
                     document.getElementById('modalBody').innerHTML = rows;
-                    new bootstrap.Modal(document.getElementById('viewModal')).show();
+                    modal.show();
                 });
             });
         });
     </script>
 @endsection
+
 
 @section('content')
 
@@ -119,6 +131,11 @@
 
                 <div class="card-header">
                     <h4 class="card-title">All Match Making Profiles</h4>
+                    <div class="d-flex justify-content-end">
+                        <a href="{{ route('admin.match-making.create') }}" class="btn btn-sm btn-primary view-btn">
+                            Create Match Making
+                        </a>
+                    </div>
                 </div>
 
                 <div class="card-body">
@@ -161,10 +178,27 @@
                                         </td>
 
                                         <td>
-                                            <button class="btn btn-sm btn-primary view-btn"
+                                            <a href="{{ route('admin.match-making.edit', $item->id) }}"
+                                                class="btn btn-sm btn-primary view-btn">
+                                                Edit
+                                            </a>
+                                            <button type="button" class="btn btn-sm btn-primary view-btn"
                                                 data-item='@json($item)'>
                                                 View
                                             </button>
+                                            <form action="{{ route('admin.match-making.destroy', $item->id) }}"
+                                                method="POST"
+                                                onsubmit="return confirm('Are you sure you want to delete this match makeing?');"
+                                                style="display:inline-block;">
+
+                                                @csrf
+                                                @method('DELETE')
+
+                                                <button type="submit" class="btn btn-sm btn-danger">
+                                                    Delete
+                                                </button>
+                                            </form>
+
                                         </td>
                                     </tr>
                                 @empty

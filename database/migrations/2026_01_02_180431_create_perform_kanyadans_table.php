@@ -22,6 +22,7 @@ return new class extends Migration
             $table->date('dob')->nullable();
             $table->string('contact_number');
             $table->string('whatsapp_number')->nullable();
+              $table->string('transction_id')->nullable();
 
             /* ================= KANYADAN DETAILS ================= */
             $table->string('kanyadan_type');

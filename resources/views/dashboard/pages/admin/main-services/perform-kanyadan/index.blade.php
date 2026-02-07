@@ -10,6 +10,11 @@
 
                 <div class="card-header">
                     <h4 class="card-title">All Kanyadan Contributions</h4>
+                    <div class="d-flex justify-content-end">
+                        <a href="{{ route('admin.perform-kanyadan.create') }}" class="btn btn-sm btn-primary view-btn">
+                            Create Kanyadan
+                        </a>
+                    </div>
                 </div>
 
                 <div class="card-body">
@@ -18,12 +23,12 @@
                             <thead>
                                 <tr>
                                     <th>SN</th>
-                                    <th>User Type</th>
+
                                     <th>Donor</th>
                                     <th>Contact</th>
                                     <th>Type</th>
                                     <th>Amount</th>
-                                    <th>Location</th>
+
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -32,17 +37,34 @@
                                 @forelse ($kanyadans as $item)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $item->user_type }}</td>
+
                                         <td>{{ $item->donor_name }}</td>
                                         <td>{{ $item->contact_number }}</td>
                                         <td>{{ $item->kanyadan_type }}</td>
                                         <td>{{ $item->donation_amount ? '₹' . $item->donation_amount : 'N/A' }}</td>
-                                        <td>{{ $item->location }}</td>
+
                                         <td>
+                                            <a href="{{ route('admin.perform-kanyadan.edit', $item->id) }}"
+                                                class="btn btn-sm btn-primary view-btn">
+                                                Edit
+                                            </a>
                                             <button type="button" class="btn btn-sm btn-primary view-btn"
                                                 data-item='@json($item)'>
                                                 View
                                             </button>
+                                            <form action="{{ route('admin.perform-kanyadan.destroy', $item->id) }}"
+                                                method="POST"
+                                                onsubmit="return confirm('Are you sure you want to delete this astrologer?');"
+                                                style="display:inline-block;">
+
+                                                @csrf
+                                                @method('DELETE')
+
+                                                <button type="submit" class="btn btn-sm btn-danger">
+                                                    Delete
+                                                </button>
+                                            </form>
+
                                         </td>
                                     </tr>
                                 @empty
@@ -92,6 +114,16 @@
 
             const modal = new bootstrap.Modal(document.getElementById('viewModal'));
 
+            // Date formatter (India format)
+            const formatDate = (date) => {
+                if (!date) return 'N/A';
+                return new Date(date).toLocaleDateString('en-IN', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric'
+                });
+            };
+
             document.querySelectorAll('.view-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
 
@@ -99,24 +131,32 @@
                     let html = '';
 
                     const fields = {
-                        'User Type': item.user_type,
-                        'Donor Name': item.donor_name,
-                        'Email': item.email ?? 'N/A',
+                        'Donor Name': item.donor_name ?? 'N/A',
+
+                        // 🔗 FROM USER TABLE
+                        'Email': item.user?.email ?? 'N/A',
+                        'Contact Number': item.user?.contact_number ?? 'N/A',
+
                         'Gender': item.gender ?? 'N/A',
-                        'DOB': item.dob ?? 'N/A',
-                        'Contact Number': item.contact_number,
+                        'DOB': formatDate(item.dob),
                         'WhatsApp Number': item.whatsapp_number ?? 'N/A',
-                        'Location': item.location,
-                        'Kanyadan Type': item.kanyadan_type,
-                        'Donation Amount': item.donation_amount ? '₹' + item.donation_amount :
+                      
+                        'Kanyadan Type': item.kanyadan_type ?? 'N/A',
+                        'Donation Amount': item.donation_amount ?
+                            '₹' + Number(item.donation_amount).toLocaleString('en-IN') :
                             'N/A',
                         'Other Kanyadan': item.other_kanyadan ?? 'N/A',
                         'Blessings / Sankalp': item.blessings ?? 'N/A',
-                        'Submitted At': item.created_at
+                        'Submitted At': formatDate(item.created_at)
                     };
 
                     for (const key in fields) {
-                        html += `<tr><th>${key}</th><td>${fields[key]}</td></tr>`;
+                        html += `
+                    <tr>
+                        <th>${key}</th>
+                        <td>${fields[key]}</td>
+                    </tr>
+                `;
                     }
 
                     document.getElementById('modalBody').innerHTML = html;

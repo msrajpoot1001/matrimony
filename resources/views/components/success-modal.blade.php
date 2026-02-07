@@ -1,18 +1,20 @@
    {{-- ✅ Success Modal (opens only if success exists) --}}
-   @if (session('success'))
+   @if (session('success') || session('error'))
        @push('content')
            <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
                <div class="modal-dialog modal-dialog-centered">
                    <div class="modal-content">
 
                        <div class="modal-header text-white" style="background-color: #f69a25;color:white">
-                           <h5 class="modal-title" id="successModalLabel" style="color:white">Success 🎉</h5>
+                           <h5 class="modal-title" id="successModalLabel" style="color:white">
+                               {{ session('success') ? 'Success 🎉' : 'Message' }}
+                           </h5>
                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                                aria-label="Close"></button>
                        </div>
 
                        <div class="modal-body">
-                           {{ session('success') }}
+                           {{ session('success') ? session('success') : session('error') }}
                        </div>
 
                        <div class="modal-footer">

@@ -19,9 +19,9 @@ class PerformKanyadan extends Model
         'dob',
         'contact_number',
         'whatsapp_number',
-        'location',
         'kanyadan_type',
         'donation_amount',
+        'transction_id',
         'other_kanyadan',
         'blessings',
     ];
